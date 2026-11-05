@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up | Smart Health and Well-Being{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="brand-icon" style="margin: 0 auto;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <line x1="19" x2="19" y1="8" y2="14"/>
+          <line x1="22" x2="16" y1="11" y2="11"/>
+        </svg>
+      </div>
+      <h2>Create Your Account</h2>
+      <p>Start tracking and improving your well-being</p>
+    </div>
+
+    <form action="{{ url_for('register') }}" method="POST">
+      <div class="form-group">
+        <label for="full_name" class="form-label">Full Name</label>
+        <input type="text" id="full_name" name="full_name" class="form-input" placeholder="e.g. Alex Carter" value="{{ full_name or '' }}" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email" class="form-label">Email Address</label>
+        <input type="email" id="email" name="email" class="form-input" placeholder="you@example.com" value="{{ email or '' }}" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" id="password" name="password" class="form-input" placeholder="At least 6 characters" required>
+      </div>
+
+      <div class="form-group">
+        <label for="confirm_password" class="form-label">Confirm Password</label>
+        <input type="password" id="confirm_password" name="confirm_password" class="form-input" placeholder="Repeat your password" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-full btn-lg">Create Free Account</button>
+    </form>
+
+    <div class="auth-bottom-switch">
+      Already have an account? <a href="{{ url_for('login') }}">Sign in here</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

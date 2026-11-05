@@ -1,0 +1,406 @@
+{% extends 'base.html' %}
+
+{% block title %}Smart Health and Well-Being | Daily Health & Wellness Tracker{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="hero-content">
+      <div class="badge-tag">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+        DTPL Smart Health Project &bull; SDG 3
+      </div>
+
+      <h1 class="hero-title">
+        Smart Health and <span class="hero-title-highlight">Well-Being</span>
+      </h1>
+
+      <p class="hero-desc">
+        An intelligent digital health companion designed to monitor daily sleep, hydration, exercise, screen time, and mood. Calculate your Well-being Score out of 100, receive personalized suggestions, and track your wellness history securely with SQLite.
+      </p>
+
+      <div class="hero-cta">
+        <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <line x1="19" x2="19" y1="8" y2="14"/>
+            <line x1="22" x2="16" y1="11" x2="11"/>
+          </svg>
+          Sign Up
+        </a>
+
+        <a href="{{ url_for('login') }}" class="btn btn-outline btn-lg">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <polyline points="10 17 15 12 10 7"/>
+            <line x1="15" x2="3" y1="12" y2="12"/>
+          </svg>
+          Login
+        </a>
+
+        <a href="#assessment-preview" class="btn btn-outline btn-lg" style="background: rgba(2, 132, 199, 0.08); border-color: var(--primary);">
+          Try Assessment
+        </a>
+      </div>
+
+      <div class="trust-badges">
+        <div class="trust-item">
+          <svg class="trust-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          SDG 3 Well-being
+        </div>
+        <div class="trust-item">
+          <svg class="trust-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          Sleep &amp; Hydration
+        </div>
+        <div class="trust-item">
+          <svg class="trust-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          Secure SQLite Storage
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Preview Mockup Card -->
+    <div class="hero-visual">
+      <div class="dashboard-preview-card">
+        <div class="card-header-bar">
+          <div class="user-badge">
+            <div class="user-avatar">AC</div>
+            <div class="user-info">
+              <h4>Alex Carter</h4>
+              <span>Today's Health Snapshot</span>
+            </div>
+          </div>
+          <span class="status-pill">
+            <span class="status-dot"></span>
+            Active Vitals
+          </span>
+        </div>
+
+        <div class="metric-grid">
+          <!-- Sleep Tile -->
+          <div class="metric-tile">
+            <div class="metric-top">
+              <span class="metric-label">Sleep (hours)</span>
+              <div class="metric-icon sleep">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="metric-value">8.0 <span style="font-size: 0.85rem; font-weight: 500;">hrs</span></div>
+            <span class="metric-label" style="color: #7c3aed;">Optimal Rest</span>
+          </div>
+
+          <!-- Water Intake Tile -->
+          <div class="metric-tile">
+            <div class="metric-top">
+              <span class="metric-label">Water Intake</span>
+              <div class="metric-icon water">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="metric-value" id="previewWaterValue">8 <span style="font-size: 0.85rem; font-weight: 500;">glasses</span></div>
+            <div class="metric-progress">
+              <div class="progress-bar-fill fill-water" id="previewWaterFill" style="width: 100%;"></div>
+            </div>
+            <button class="interactive-water-btn" id="quickWaterAddBtn">+ 1 Glass</button>
+          </div>
+
+          <!-- Exercise Tile -->
+          <div class="metric-tile">
+            <div class="metric-top">
+              <span class="metric-label">Exercise</span>
+              <div class="metric-icon steps">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                </svg>
+              </div>
+            </div>
+            <div class="metric-value">35 <span style="font-size: 0.85rem; font-weight: 500;">mins</span></div>
+            <span class="metric-label" style="color: var(--accent-emerald);">Active Target Met</span>
+          </div>
+
+          <!-- Screen Time Tile -->
+          <div class="metric-tile">
+            <div class="metric-top">
+              <span class="metric-label">Screen Time</span>
+              <div class="metric-icon heart" style="background:#fee2e2; color:#ef4444;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                  <line x1="8" y1="21" x2="16" y2="21"/>
+                  <line x1="12" y1="17" x2="12" y2="21"/>
+                </svg>
+              </div>
+            </div>
+            <div class="metric-value">4.0 <span style="font-size: 0.85rem; font-weight: 500;">hrs</span></div>
+            <span class="metric-label" style="color: var(--primary);">Moderate Breaks</span>
+          </div>
+        </div>
+
+        <!-- Overall Wellness Score Widget -->
+        <div class="wellness-score-card">
+          <div class="score-text">
+            <h5>Daily Well-being Score</h5>
+            <p>Balanced lifestyle &amp; daily habits</p>
+          </div>
+          <div class="score-badge">93 / 100</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================================================== -->
+<!-- INTERACTIVE DAILY WELL-BEING ASSESSMENT SECTION                 -->
+<!-- =============================================================== -->
+<section class="section" id="assessment-preview" style="background: linear-gradient(180deg, var(--bg-alt) 0%, #ffffff 100%);">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-subtitle">Interactive Health Tool</span>
+      <h2 class="section-title">Daily Well-being Assessment</h2>
+      <p class="section-desc">
+        Calculate your Well-being Score out of 100 based on your sleep, water intake, exercise, screen time, and mood.
+      </p>
+    </div>
+
+    <div class="dash-section-card" style="max-width: 860px; margin: 0 auto; box-shadow: var(--shadow-lg);">
+      <form id="homeAssessmentForm" class="log-form-grid" onsubmit="return false;">
+        
+        <!-- 1. Sleep (hours) -->
+        <div class="form-group">
+          <label for="home_sleep_hours" class="form-label">
+            <span class="label-icon">😴</span> 1. Sleep (hours)
+          </label>
+          <input type="number" id="home_sleep_hours" class="form-input" 
+                 placeholder="e.g. 8.0" min="0" max="24" step="0.5" value="8.0" required>
+          <span class="input-helper">Daily sleep hours (recommended: 7.0 – 9.0 hrs)</span>
+        </div>
+
+        <!-- 2. Water Intake (glasses) -->
+        <div class="form-group">
+          <label for="home_water_glasses" class="form-label">
+            <span class="label-icon">💧</span> 2. Water Intake (glasses)
+          </label>
+          <input type="number" id="home_water_glasses" class="form-input" 
+                 placeholder="e.g. 8" min="0" max="30" step="1" value="8" required>
+          <span class="input-helper">Number of glasses consumed (target: 8 glasses)</span>
+        </div>
+
+        <!-- 3. Exercise (minutes) -->
+        <div class="form-group">
+          <label for="home_exercise_mins" class="form-label">
+            <span class="label-icon">🏃</span> 3. Exercise (minutes)
+          </label>
+          <input type="number" id="home_exercise_mins" class="form-input" 
+                 placeholder="e.g. 35" min="0" max="600" step="1" value="35" required>
+          <span class="input-helper">Daily exercise duration (target: 30+ minutes)</span>
+        </div>
+
+        <!-- 4. Screen Time (hours) -->
+        <div class="form-group">
+          <label for="home_screen_time_hours" class="form-label">
+            <span class="label-icon">📱</span> 4. Screen Time (hours)
+          </label>
+          <input type="number" id="home_screen_time_hours" class="form-input" 
+                 placeholder="e.g. 4.0" min="0" max="24" step="0.5" value="4.0" required>
+          <span class="input-helper">Daily screen duration (moderate with pauses)</span>
+        </div>
+
+        <!-- 5. Mood -->
+        <div class="form-group full-width">
+          <label for="home_mood" class="form-label">
+            <span class="label-icon">😊</span> 5. Mood
+          </label>
+          <select id="home_mood" class="form-input">
+            <option value="Excellent 😊">Excellent 😊</option>
+            <option value="Good 🙂" selected>Good 🙂</option>
+            <option value="Neutral 😐">Neutral 😐</option>
+            <option value="Stressed 😟">Stressed 😟</option>
+            <option value="Sad 😔">Sad 😔</option>
+          </select>
+          <span class="input-helper">How are you feeling emotionally and mentally today</span>
+        </div>
+
+        <!-- 6. Button: Calculate Well-being Score -->
+        <div class="full-width" style="margin-top: 10px;">
+          <button type="button" class="btn btn-primary btn-lg" id="homeBtnCalculateScore" style="padding: 14px 28px; width: 100%;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+              <path d="M12 5 9.04 11l6 2.05-3.04 5.95"/>
+            </svg>
+            Calculate Well-being Score
+          </button>
+        </div>
+      </form>
+
+      <!-- 7. Score Display -->
+      <div class="assessment-result-card" style="margin-top: 28px;">
+        <div class="assessment-result-header">
+          <div class="score-display-box">
+            <span class="score-display-label">Calculated Result</span>
+            <div class="score-display-title" id="homeScoreTitle">
+              Your Well-being Score: <span class="score-highlight" id="homeScoreHighlight">93/100</span>
+            </div>
+          </div>
+          <div class="score-badge-indicator" id="homeScoreBadge">
+            <span class="score-badge-sm score-optimal">Optimal Health Tier</span>
+          </div>
+        </div>
+
+        <div class="metric-progress" style="height: 12px; margin: 16px 0; border-radius: 6px;">
+          <div class="progress-bar-fill fill-steps" id="homeScoreProgressBar" style="width: 93%; transition: width 0.6s ease;"></div>
+        </div>
+
+        <!-- 8. Suggestions Section Below Score -->
+        <div class="suggestions-container">
+          <div class="suggestions-header">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <h4>Suggestions</h4>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 12px;">
+            Personalized wellness suggestions based on your entered values:
+          </p>
+          <ul class="suggestions-list" id="homeSuggestionsList">
+            <li class="suggestion-item"><span class="suggestion-bullet">✓</span><span>Optimal sleep (8.0 hrs): Excellent! 7–9 hours of sleep promotes immune health and focus.</span></li>
+            <li class="suggestion-item"><span class="suggestion-bullet">✓</span><span>Great hydration (8 glasses): You reached your daily hydration target.</span></li>
+            <li class="suggestion-item"><span class="suggestion-bullet">✓</span><span>Active lifestyle (35 mins): Superb exercise duration! Regular physical activity boosts cardiovascular fitness.</span></li>
+            <li class="suggestion-item"><span class="suggestion-bullet">✓</span><span>Moderate screen time (4.0 hrs): Remember to take brief pauses away from the monitor during long periods.</span></li>
+            <li class="suggestion-item"><span class="suggestion-bullet">✓</span><span>Mind &amp; Mood: Positive and uplifting mindset! Channel this positive energy into your day.</span></li>
+          </ul>
+
+          <div style="margin-top: 20px; padding-top: 16px; border-top: 1px dashed var(--border-light); text-align: center;">
+            <p style="font-size: 0.92rem; color: var(--text-dark); margin-bottom: 12px; font-weight: 500;">
+              Want to save your assessment records and review your <strong>Recent Health History</strong>?
+            </p>
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+              <a href="{{ url_for('register') }}" class="btn btn-primary">Create Free Account to Save</a>
+              <a href="{{ url_for('login') }}" class="btn btn-outline">Login to Existing Account</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Core Features Section -->
+<section class="section section-bg-alt" id="features">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-subtitle">Features Overview</span>
+      <h2 class="section-title">Designed for Your Everyday Well-Being</h2>
+      <p class="section-desc">
+        Explore core health monitoring tools designed to help you stay accountable, informed, and inspired throughout your daily routines.
+      </p>
+    </div>
+
+    <div class="features-grid">
+      <!-- Feature 1 -->
+      <div class="feature-card">
+        <div class="feature-icon-wrapper" style="background-color: var(--primary-light); color: var(--primary);">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+          </svg>
+        </div>
+        <h3>Sleep Monitoring</h3>
+        <p>Log your nightly sleep hours to maintain adequate recovery, mental rejuvenation, and cellular repair.</p>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="feature-card">
+        <div class="feature-icon-wrapper" style="background-color: var(--secondary-light); color: var(--secondary);">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/>
+          </svg>
+        </div>
+        <h3>Hydration Tracking</h3>
+        <p>Count your daily glasses of water to satisfy bodily hydration targets and promote healthy metabolism.</p>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="feature-card">
+        <div class="feature-icon-wrapper" style="background-color: #ede9fe; color: #7c3aed;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </div>
+        <h3>Physical Exercise</h3>
+        <p>Record your daily active exercise minutes to sustain cardiovascular fitness, stamina, and vitality.</p>
+      </div>
+
+      <!-- Feature 4 -->
+      <div class="feature-card">
+        <div class="feature-icon-wrapper" style="background-color: var(--accent-emerald-light); color: var(--accent-emerald);">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+        </div>
+        <h3>Screen Time &amp; Mood</h3>
+        <p>Keep screen hours balanced and track daily mood states for holistic physical and psychological well-being.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="section" id="how-it-works">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-subtitle">Simple Steps</span>
+      <h2 class="section-title">How Smart Health Works</h2>
+      <p class="section-desc">
+        A seamless 3-step approach to taking active ownership of your daily health habits.
+      </p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-number">1</div>
+        <h3>Register an Account</h3>
+        <p>Create your personal profile securely to start logging and preserving your wellness milestones.</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">2</div>
+        <h3>Take Daily Assessment</h3>
+        <p>Input sleep hours, water intake, exercise duration, screen time, and current mood.</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">3</div>
+        <h3>Calculate &amp; Improve</h3>
+        <p>Review your Well-being Score out of 100, receive personalized suggestions, and inspect your SQLite health history.</p>
+      </div>
+    </div>
+
+    <!-- Call To Action Banner -->
+    <div class="cta-banner">
+      <h2>Start Your Health Journey Today</h2>
+      <p>Join the Smart Health and Well-Being platform to build positive daily habits aligned with SDG 3.</p>
+      <div class="cta-buttons">
+        <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">Sign Up Now</a>
+        <a href="{{ url_for('login') }}" class="btn btn-outline btn-lg" style="color: #ffffff; border-color: rgba(255,255,255,0.4);">Member Login</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
